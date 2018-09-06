@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "strictNullChecks": true,
+        "downlevelIteration": true,
+        "outDir": "./build/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "target": "es5",
+        "lib": ["DOM","ES6","DOM.Iterable","ScriptHost"],
+        "jsx": "react",
+        "rootDir": "./"
+    }
+}
