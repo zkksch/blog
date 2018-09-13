@@ -1,5 +1,7 @@
+const path = require('path');
+
 module.exports = {
-    entry: "./app.tsx",
+    entry: "./src/app.tsx",
     output: {
         filename: "app.js",
         path: __dirname + "/../blog/static/js/"
@@ -9,8 +11,9 @@ module.exports = {
     devtool: "source-map",
 
     resolve: {
+        modules: [path.resolve('src'), 'node_modules'],
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json"],
     },
 
     module: {

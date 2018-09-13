@@ -9,8 +9,9 @@
         "noImplicitAny": true,
         "module": "commonjs",
         "target": "es5",
-        "lib": ["DOM","ES6","DOM.Iterable","ScriptHost"],
+        "lib": ["DOM","ES6","DOM.Iterable","ScriptHost","ESNext","ES2018","ES2017"],
         "jsx": "react",
-        "rootDir": "./"
+        "rootDir": "./",
+        "baseUrl": "./src",
     }
 }

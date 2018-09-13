@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./app.tsx");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/app.tsx");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -148,518 +148,6 @@ module.exports = function(originalModule) {
 	}
 	return module;
 };
-
-
-/***/ }),
-
-/***/ "./app.tsx":
-/*!*****************!*\
-  !*** ./app.tsx ***!
-  \*****************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(/*! react */ "react");
-var ReactDOM = __webpack_require__(/*! react-dom */ "react-dom");
-var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-var store_1 = __webpack_require__(/*! ./core/store */ "./core/store.ts");
-var app_1 = __webpack_require__(/*! ./core/app */ "./core/app/index.tsx");
-ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store_1.default },
-    React.createElement(app_1.default, null)), document.getElementById('root'));
-
-
-/***/ }),
-
-/***/ "./core/actions/constants.ts":
-/*!***********************************!*\
-  !*** ./core/actions/constants.ts ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LOAD_POSTS = 'LOAD_POSTS';
-
-
-/***/ }),
-
-/***/ "./core/actions/index.ts":
-/*!*******************************!*\
-  !*** ./core/actions/index.ts ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var typesafe_actions_1 = __webpack_require__(/*! typesafe-actions */ "./node_modules/typesafe-actions/dist/index.umd.js");
-var actionType = __webpack_require__(/*! ./constants */ "./core/actions/constants.ts");
-exports.loadPosts = function () {
-    var posts = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        posts[_i] = arguments[_i];
-    }
-    return typesafe_actions_1.action(actionType.LOAD_POSTS, posts);
-};
-
-
-/***/ }),
-
-/***/ "./core/app/index.tsx":
-/*!****************************!*\
-  !*** ./core/app/index.tsx ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var React = __webpack_require__(/*! react */ "react");
-var post_1 = __webpack_require__(/*! ../../modules/post */ "./modules/post/index.tsx");
-var App = /** @class */ (function (_super) {
-    __extends(App, _super);
-    function App() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    App.prototype.render = function () {
-        return (React.createElement("div", null,
-            React.createElement("h1", null, "Posts:"),
-            React.createElement(post_1.default, null)));
-    };
-    return App;
-}(React.Component));
-exports.default = App;
-
-
-/***/ }),
-
-/***/ "./core/reducers/index.ts":
-/*!********************************!*\
-  !*** ./core/reducers/index.ts ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-var actionType = __webpack_require__(/*! ../actions/constants */ "./core/actions/constants.ts");
-var rootReducer = redux_1.combineReducers({
-    post: function (state, action) {
-        if (state === void 0) { state = { posts: [] }; }
-        switch (action.type) {
-            case actionType.LOAD_POSTS:
-                return {
-                    posts: action.payload
-                };
-            default:
-                return state;
-        }
-    }
-});
-exports.default = rootReducer;
-
-
-/***/ }),
-
-/***/ "./core/requests/index.ts":
-/*!********************************!*\
-  !*** ./core/requests/index.ts ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var universal_cookie_1 = __webpack_require__(/*! universal-cookie */ "./node_modules/universal-cookie/es6/index.js");
-function includeCredentials(options) {
-    // fetch doesn't includes credentials by default
-    options.credentials = 'include';
-    return options;
-}
-function csrfProtected(options) {
-    // gets django csrf token from cookies and adds it in headers
-    options.headers = __assign({}, options.headers, { "X-CSRFToken": (new universal_cookie_1.default()).get('csrftoken') });
-    return options;
-}
-function safeFetch(url, options) {
-    // fetch for safe methods
-    options = includeCredentials(options);
-    return fetch(url, options);
-}
-exports.safeFetch = safeFetch;
-function unsafeFetch(url, options) {
-    // fetch for unsafe methods
-    options = includeCredentials(options);
-    options = csrfProtected(options);
-    return fetch(url, options);
-}
-exports.unsafeFetch = unsafeFetch;
-
-
-/***/ }),
-
-/***/ "./core/store.ts":
-/*!***********************!*\
-  !*** ./core/store.ts ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-var reducers_1 = __webpack_require__(/*! ./reducers */ "./core/reducers/index.ts");
-function configureStore(initialState) {
-    var middlewares = [];
-    var enhancer = redux_1.compose(redux_1.applyMiddleware.apply(void 0, __spread(middlewares)));
-    var store = redux_1.createStore(reducers_1.default, initialState, enhancer);
-    return store;
-}
-var _store = configureStore();
-exports.default = _store;
-
-
-/***/ }),
-
-/***/ "./modules/post/index.tsx":
-/*!********************************!*\
-  !*** ./modules/post/index.tsx ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __read = (this && this.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-var React = __webpack_require__(/*! react */ "react");
-var actions_1 = __webpack_require__(/*! ../../core/actions */ "./core/actions/index.ts");
-var requests_1 = __webpack_require__(/*! ../../core/requests */ "./core/requests/index.ts");
-var PostModule = /** @class */ (function (_super) {
-    __extends(PostModule, _super);
-    function PostModule(props) {
-        return _super.call(this, props) || this;
-    }
-    PostModule.prototype.renderPost = function (post, idx) {
-        return (React.createElement("div", { key: idx },
-            React.createElement("h6", null, post.title),
-            React.createElement("div", null, post.content)));
-    };
-    PostModule.prototype.render = function () {
-        var _this = this;
-        return (React.createElement("div", null,
-            React.createElement("a", { href: "#", onClick: function () {
-                    requests_1.safeFetch('/post', {}).then(function (response) { return response.json().then(function (data) {
-                        var _a;
-                        return (_a = _this.props).loadPosts.apply(_a, __spread(data));
-                    }); });
-                } }, "Refresh"),
-            this.props.posts.map(this.renderPost)));
-    };
-    return PostModule;
-}(React.Component));
-exports.default = react_redux_1.connect(function (state) {
-    return {
-        posts: state.post.posts
-    };
-}, {
-    loadPosts: actions_1.loadPosts
-})(PostModule);
-
-
-/***/ }),
-
-/***/ "./node_modules/cookie/index.js":
-/*!**************************************!*\
-  !*** ./node_modules/cookie/index.js ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/*!
- * cookie
- * Copyright(c) 2012-2014 Roman Shtylman
- * Copyright(c) 2015 Douglas Christopher Wilson
- * MIT Licensed
- */
-
-
-
-/**
- * Module exports.
- * @public
- */
-
-exports.parse = parse;
-exports.serialize = serialize;
-
-/**
- * Module variables.
- * @private
- */
-
-var decode = decodeURIComponent;
-var encode = encodeURIComponent;
-var pairSplitRegExp = /; */;
-
-/**
- * RegExp to match field-content in RFC 7230 sec 3.2
- *
- * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
- * field-vchar   = VCHAR / obs-text
- * obs-text      = %x80-FF
- */
-
-var fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
-
-/**
- * Parse a cookie header.
- *
- * Parse the given cookie header string into an object
- * The object has the various cookies as keys(names) => values
- *
- * @param {string} str
- * @param {object} [options]
- * @return {object}
- * @public
- */
-
-function parse(str, options) {
-  if (typeof str !== 'string') {
-    throw new TypeError('argument str must be a string');
-  }
-
-  var obj = {}
-  var opt = options || {};
-  var pairs = str.split(pairSplitRegExp);
-  var dec = opt.decode || decode;
-
-  for (var i = 0; i < pairs.length; i++) {
-    var pair = pairs[i];
-    var eq_idx = pair.indexOf('=');
-
-    // skip things that don't look like key=value
-    if (eq_idx < 0) {
-      continue;
-    }
-
-    var key = pair.substr(0, eq_idx).trim()
-    var val = pair.substr(++eq_idx, pair.length).trim();
-
-    // quoted values
-    if ('"' == val[0]) {
-      val = val.slice(1, -1);
-    }
-
-    // only assign once
-    if (undefined == obj[key]) {
-      obj[key] = tryDecode(val, dec);
-    }
-  }
-
-  return obj;
-}
-
-/**
- * Serialize data into a cookie header.
- *
- * Serialize the a name value pair into a cookie string suitable for
- * http headers. An optional options object specified cookie parameters.
- *
- * serialize('foo', 'bar', { httpOnly: true })
- *   => "foo=bar; httpOnly"
- *
- * @param {string} name
- * @param {string} val
- * @param {object} [options]
- * @return {string}
- * @public
- */
-
-function serialize(name, val, options) {
-  var opt = options || {};
-  var enc = opt.encode || encode;
-
-  if (typeof enc !== 'function') {
-    throw new TypeError('option encode is invalid');
-  }
-
-  if (!fieldContentRegExp.test(name)) {
-    throw new TypeError('argument name is invalid');
-  }
-
-  var value = enc(val);
-
-  if (value && !fieldContentRegExp.test(value)) {
-    throw new TypeError('argument val is invalid');
-  }
-
-  var str = name + '=' + value;
-
-  if (null != opt.maxAge) {
-    var maxAge = opt.maxAge - 0;
-    if (isNaN(maxAge)) throw new Error('maxAge should be a Number');
-    str += '; Max-Age=' + Math.floor(maxAge);
-  }
-
-  if (opt.domain) {
-    if (!fieldContentRegExp.test(opt.domain)) {
-      throw new TypeError('option domain is invalid');
-    }
-
-    str += '; Domain=' + opt.domain;
-  }
-
-  if (opt.path) {
-    if (!fieldContentRegExp.test(opt.path)) {
-      throw new TypeError('option path is invalid');
-    }
-
-    str += '; Path=' + opt.path;
-  }
-
-  if (opt.expires) {
-    if (typeof opt.expires.toUTCString !== 'function') {
-      throw new TypeError('option expires is invalid');
-    }
-
-    str += '; Expires=' + opt.expires.toUTCString();
-  }
-
-  if (opt.httpOnly) {
-    str += '; HttpOnly';
-  }
-
-  if (opt.secure) {
-    str += '; Secure';
-  }
-
-  if (opt.sameSite) {
-    var sameSite = typeof opt.sameSite === 'string'
-      ? opt.sameSite.toLowerCase() : opt.sameSite;
-
-    switch (sameSite) {
-      case true:
-        str += '; SameSite=Strict';
-        break;
-      case 'lax':
-        str += '; SameSite=Lax';
-        break;
-      case 'strict':
-        str += '; SameSite=Strict';
-        break;
-      default:
-        throw new TypeError('option sameSite is invalid');
-    }
-  }
-
-  return str;
-}
-
-/**
- * Try decoding a string using a decoding function.
- *
- * @param {string} str
- * @param {function} decode
- * @private
- */
-
-function tryDecode(str, decode) {
-  try {
-    return decode(str);
-  } catch (e) {
-    return str;
-  }
-}
 
 
 /***/ }),
@@ -3149,6 +2637,38 @@ function warning(message) {
 
 /***/ }),
 
+/***/ "./node_modules/redux-thunk/es/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/redux-thunk/es/index.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+/* harmony default export */ __webpack_exports__["default"] = (thunk);
+
+/***/ }),
+
 /***/ "./node_modules/redux/es/redux.js":
 /*!****************************************!*\
   !*** ./node_modules/redux/es/redux.js ***!
@@ -3832,168 +3352,258 @@ function symbolObservablePonyfill(root) {
 
 /***/ }),
 
-/***/ "./node_modules/universal-cookie/es6/Cookies.js":
-/*!******************************************************!*\
-  !*** ./node_modules/universal-cookie/es6/Cookies.js ***!
-  \******************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/app.tsx":
+/*!*********************!*\
+  !*** ./src/app.tsx ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var cookie__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cookie */ "./node_modules/cookie/index.js");
-/* harmony import */ var cookie__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(cookie__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./node_modules/universal-cookie/es6/utils.js");
 
-
-// We can't please Rollup and TypeScript at the same time
-// Only way to make both of them work
-var objectAssign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
-var Cookies = /** @class */ (function () {
-    function Cookies(cookies) {
-        this.changeListeners = [];
-        this.cookies = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["parseCookies"])(cookies);
-        this.HAS_DOCUMENT_COOKIE = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["hasDocumentCookie"])();
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
     }
-    Cookies.prototype._updateBrowserValues = function () {
-        if (!this.HAS_DOCUMENT_COOKIE) {
-            return;
-        }
-        this.cookies = cookie__WEBPACK_IMPORTED_MODULE_0__["parse"](document.cookie);
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    Cookies.prototype._emitChange = function (params) {
-        for (var i = 0; i < this.changeListeners.length; ++i) {
-            this.changeListeners[i](params);
-        }
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = __webpack_require__(/*! react */ "react");
+var ReactDOM = __webpack_require__(/*! react-dom */ "react-dom");
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var store_1 = __webpack_require__(/*! core/redux/store */ "./src/core/redux/store/index.ts");
+var actions = __webpack_require__(/*! core/redux/actions */ "./src/core/redux/actions/index.ts");
+var _App = /** @class */ (function (_super) {
+    __extends(_App, _super);
+    function _App() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    _App.prototype.render = function () {
+        return (React.createElement("div", null,
+            React.createElement("a", { href: "#", onClick: this.props.requestPosts }, "Load"),
+            React.createElement("br", null),
+            this.props.posts.map(function (el, index) {
+                return (React.createElement("div", { key: index }, el));
+            })));
     };
-    Cookies.prototype.get = function (name, options) {
-        if (options === void 0) { options = {}; }
-        this._updateBrowserValues();
-        return Object(_utils__WEBPACK_IMPORTED_MODULE_1__["readCookie"])(this.cookies[name], options);
+    return _App;
+}(React.Component));
+var App = react_redux_1.connect(function (state) {
+    return {
+        posts: state.posts
     };
-    Cookies.prototype.getAll = function (options) {
-        if (options === void 0) { options = {}; }
-        this._updateBrowserValues();
-        var result = {};
-        for (var name_1 in this.cookies) {
-            result[name_1] = Object(_utils__WEBPACK_IMPORTED_MODULE_1__["readCookie"])(this.cookies[name_1], options);
-        }
-        return result;
-    };
-    Cookies.prototype.set = function (name, value, options) {
-        var _a;
-        if (typeof value === 'object') {
-            value = JSON.stringify(value);
-        }
-        this.cookies = objectAssign({}, this.cookies, (_a = {}, _a[name] = value, _a));
-        if (this.HAS_DOCUMENT_COOKIE) {
-            document.cookie = cookie__WEBPACK_IMPORTED_MODULE_0__["serialize"](name, value, options);
-        }
-        this._emitChange({ name: name, value: value, options: options });
-    };
-    Cookies.prototype.remove = function (name, options) {
-        var finalOptions = (options = objectAssign({}, options, {
-            expires: new Date(1970, 1, 1, 0, 0, 1),
-            maxAge: 0
-        }));
-        this.cookies = objectAssign({}, this.cookies);
-        delete this.cookies[name];
-        if (this.HAS_DOCUMENT_COOKIE) {
-            document.cookie = cookie__WEBPACK_IMPORTED_MODULE_0__["serialize"](name, '', finalOptions);
-        }
-        this._emitChange({ name: name, value: undefined, options: options });
-    };
-    Cookies.prototype.addChangeListener = function (callback) {
-        this.changeListeners.push(callback);
-    };
-    Cookies.prototype.removeChangeListener = function (callback) {
-        var idx = this.changeListeners.indexOf(callback);
-        if (idx >= 0) {
-            this.changeListeners.splice(idx, 1);
-        }
-    };
-    return Cookies;
-}());
-/* harmony default export */ __webpack_exports__["default"] = (Cookies);
+}, {
+    requestPosts: actions.requestPosts,
+})(_App);
+ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store_1.default },
+    React.createElement(App, null)), document.getElementById('root'));
 
 
 /***/ }),
 
-/***/ "./node_modules/universal-cookie/es6/index.js":
-/*!****************************************************!*\
-  !*** ./node_modules/universal-cookie/es6/index.js ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/core/redux/actions/constants.ts":
+/*!*********************************************!*\
+  !*** ./src/core/redux/actions/constants.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Cookies__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Cookies */ "./node_modules/universal-cookie/es6/Cookies.js");
 
-/* harmony default export */ __webpack_exports__["default"] = (_Cookies__WEBPACK_IMPORTED_MODULE_0__["default"]);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SET_POST_REQUEST = 'SET_POST_REQUEST';
+exports.SET_POST_SUCCESS = 'SET_POST_SUCCESS';
+exports.SET_POST_FAILURE = 'SET_POST_FAILURE';
 
 
 /***/ }),
 
-/***/ "./node_modules/universal-cookie/es6/utils.js":
-/*!****************************************************!*\
-  !*** ./node_modules/universal-cookie/es6/utils.js ***!
-  \****************************************************/
-/*! exports provided: hasDocumentCookie, cleanCookies, parseCookies, isParsingCookie, readCookie */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/core/redux/actions/index.ts":
+/*!*****************************************!*\
+  !*** ./src/core/redux/actions/index.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasDocumentCookie", function() { return hasDocumentCookie; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cleanCookies", function() { return cleanCookies; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseCookies", function() { return parseCookies; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isParsingCookie", function() { return isParsingCookie; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "readCookie", function() { return readCookie; });
-/* harmony import */ var cookie__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! cookie */ "./node_modules/cookie/index.js");
-/* harmony import */ var cookie__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(cookie__WEBPACK_IMPORTED_MODULE_0__);
 
-function hasDocumentCookie() {
-    // Can we get/set cookies on document.cookie?
-    return typeof document === 'object' && typeof document.cookie === 'string';
-}
-function cleanCookies() {
-    document.cookie.split(';').forEach(function (c) {
-        document.cookie = c
-            .replace(/^ +/, '')
-            .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
-}
-function parseCookies(cookies) {
-    if (typeof cookies === 'string') {
-        return cookie__WEBPACK_IMPORTED_MODULE_0__["parse"](cookies);
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-    else if (typeof cookies === 'object' && cookies !== null) {
-        return cookies;
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
     }
-    else {
-        return {};
-    }
-}
-function isParsingCookie(value, doNotParse) {
-    if (typeof doNotParse === 'undefined') {
-        // We guess if the cookie start with { or [, it has been serialized
-        doNotParse =
-            !value || (value[0] !== '{' && value[0] !== '[' && value[0] !== '"');
-    }
-    return !doNotParse;
-}
-function readCookie(value, options) {
-    if (options === void 0) { options = {}; }
-    if (isParsingCookie(value, options.doNotParse)) {
+    catch (error) { e = { error: error }; }
+    finally {
         try {
-            return JSON.parse(value);
+            if (r && !r.done && (m = i["return"])) m.call(i);
         }
-        catch (e) {
-            // At least we tried
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
+var _this = this;
+Object.defineProperty(exports, "__esModule", { value: true });
+var typesafe_actions_1 = __webpack_require__(/*! typesafe-actions */ "./node_modules/typesafe-actions/dist/index.umd.js");
+var actionType = __webpack_require__(/*! core/redux/actions/constants */ "./src/core/redux/actions/constants.ts");
+exports.loadingPosts = function () { return typesafe_actions_1.action(actionType.SET_POST_REQUEST); };
+exports.setPosts = function () {
+    var posts = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        posts[_i] = arguments[_i];
+    }
+    return typesafe_actions_1.action(actionType.SET_POST_SUCCESS, posts);
+};
+exports.setPostsErr = function () { return typesafe_actions_1.action(actionType.SET_POST_FAILURE); };
+exports.requestPosts = function () {
+    return function (dispatch, getState) { return __awaiter(_this, void 0, void 0, function () {
+        var response, data, e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    dispatch(exports.loadingPosts());
+                    return [4 /*yield*/, fetch('/post/')];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    return [2 /*return*/, dispatch(exports.setPosts.apply(void 0, __spread(data.map(function (el) { return el.title; }))))];
+                case 3:
+                    e_1 = _a.sent();
+                    return [2 /*return*/, dispatch(exports.setPostsErr())];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+};
+
+
+/***/ }),
+
+/***/ "./src/core/redux/reducers/index.ts":
+/*!******************************************!*\
+  !*** ./src/core/redux/reducers/index.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+var actionType = __webpack_require__(/*! core/redux/actions/constants */ "./src/core/redux/actions/constants.ts");
+var rootReducer = redux_1.combineReducers({
+    posts: function (state, action) {
+        if (state === void 0) { state = []; }
+        switch (action.type) {
+            case actionType.SET_POST_REQUEST:
+                return ['LOADING ...'];
+            case actionType.SET_POST_SUCCESS:
+                return action.payload;
+            case actionType.SET_POST_FAILURE:
+                return ['ERROR'];
+            default:
+                return state;
         }
     }
-    return value;
+});
+exports.default = rootReducer;
+
+
+/***/ }),
+
+/***/ "./src/core/redux/store/index.ts":
+/*!***************************************!*\
+  !*** ./src/core/redux/store/index.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+var redux_thunk_1 = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js");
+var reducers_1 = __webpack_require__(/*! core/redux/reducers */ "./src/core/redux/reducers/index.ts");
+function configureStore(initialState) {
+    var middlewares = [
+        redux_thunk_1.default,
+    ];
+    var enhancer = redux_1.compose(redux_1.applyMiddleware.apply(void 0, __spread(middlewares)));
+    var store = redux_1.createStore(reducers_1.default, initialState, enhancer);
+    return store;
 }
+var _store = configureStore();
+exports.default = _store;
 
 
 /***/ }),
