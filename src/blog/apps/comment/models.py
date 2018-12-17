@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
+from rest_framework.exceptions import ValidationError
 
 from blog.apps.post.models import Post
 from blog.core.models import BaseModel
@@ -31,3 +32,11 @@ class Comment(BaseModel, MPTTModel):
             f'Comment in post "{self.post}" commented by {self.user} '
             f'on {self.created: %d.%m.%Y}'
         )
+
+    def clean(self):
+        super(Comment, self).clean()
+        if self.parent.post_id != self.post_id:
+            raise ValidationError(
+                _('Post of parent commentary mustn\'t differ from '
+                  'the post of child commentary')
+            )

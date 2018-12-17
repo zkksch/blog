@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from blog.apps.post import models
 from blog.apps.post import serializers
@@ -8,12 +8,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = models.Post.objects.all()
     serializer_class = serializers.PostSerializer
 
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class PostVoteViewSet(viewsets.ModelViewSet):
-    queryset = models.PostVote.objects.all()
-    serializer_class = serializers.PostVoteSerializer
-
-
-class PostTagViewSet(viewsets.ModelViewSet):
-    queryset = models.PostTag.objects.all()
-    serializer_class = serializers.PostTagSerializer
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

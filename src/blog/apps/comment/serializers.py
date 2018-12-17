@@ -4,7 +4,23 @@ from blog.apps.comment import models
 
 
 class CommentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Comment
+
         fields = (
-            'created', 'modified', 'user', 'content', 'parent')
+            'id',
+            'created',
+            'modified',
+            'user',
+            'post',
+            'content',
+            'parent',
+        )
+
+        read_only_fields = (
+            'id',
+            'created',
+            'modified',
+            'user',
+        )

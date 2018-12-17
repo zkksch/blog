@@ -16,5 +16,9 @@ class BaseModel(models.Model):
     def __str__(self):
         return f'{self.__class__.__name__} (id={self.id}) {{ {self._info} }}'
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(BaseModel, self).save(*args, **kwargs)
+
     class Meta:
         abstract = True

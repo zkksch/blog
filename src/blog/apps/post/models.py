@@ -9,7 +9,7 @@ from blog.core.models import BaseModel
 class Post(BaseModel):
     user = models.ForeignKey(
         User, related_name='posts', verbose_name=_('Created by'),
-        null=True, blank=True, on_delete=models.SET_NULL)
+        on_delete=models.CASCADE)
 
     tags = models.ManyToManyField(
         Tag, related_name='posts', verbose_name=_('Tags'),
@@ -22,6 +22,29 @@ class Post(BaseModel):
     content = models.TextField(
         verbose_name=_('Post'),
         null=False, blank=False)
+
+    @property
+    def tag_list(self):
+        return ', '.join(tag.tag for tag in self.tags.all())
+
+    @tag_list.setter
+    def tag_list(self, value):
+        tags = []
+
+        for tag in [tag.strip() for tag in value.split(',')]:
+            try:
+                tag = Tag.objects.get(tag=tag)
+            except Tag.DoesNotExist:
+                tag = Tag.objects.create(
+                    tag=tag,
+                    user=self.user
+                )
+
+            tags.append(tag)
+
+        PostTag.objects.filter(post=self).delete()
+        for tag in tags:
+            PostTag.objects.create(post=self, tag=tag)
 
     @property
     def _info(self):

@@ -26,11 +26,7 @@ from blog.apps.tag import views as tag_views
 router = routers.DefaultRouter()
 
 router.register(r'post', post_views.PostViewSet)
-router.register(r'post_tag', post_views.PostTagViewSet)
-router.register(r'post_vote', post_views.PostVoteViewSet)
-
 router.register(r'comment', comment_views.CommentViewSet)
-
 router.register(r'tag', tag_views.TagViewSet)
 
 
